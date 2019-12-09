@@ -17,7 +17,7 @@ import array as arr
 
 batch_size = 128
 num_classes = 10
-epochs = 1
+epochs = 3
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -39,7 +39,7 @@ anz_datensaetze_input = 0
 
 # Daten einlesen für die Testmenge
 
-for aktuelle_zahl in range(0, 9):
+for aktuelle_zahl in range(0, 10):
 
     verzeichnis = './TESTSET/' + str(aktuelle_zahl) + '/'
 
@@ -51,9 +51,9 @@ for aktuelle_zahl in range(0, 9):
 
         for entry in entries:
             pfad = verzeichnis + entry.name
-            #print(pfad)
+            print(pfad)
             x_test[anz_datensaetze_input] = mpimg.imread(pfad)
-            y_test[anz_datensaetze_input] = 0
+            y_test[anz_datensaetze_input] = aktuelle_zahl
             anz_datensaetze_input=anz_datensaetze_input+1
 
 
@@ -94,12 +94,15 @@ model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
+
+# Start des Lernprozesses
+# der optimizer Parameter kann noch weitere Verbesserungen enthalten
 model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
 
 
-# Training
+# Parameter für das Testing werden festgelgt
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
@@ -130,7 +133,7 @@ matrix = [[0 for x in range(w)] for y in range(h) ]
 
 number_of_zeros = 0
 
-for b in range(0, 150):
+for b in range(0, 1000):
 
     digit_array = pre_X[b]
     label_array = y_test[i]
@@ -149,6 +152,6 @@ for b in range(0, 150):
 
 
 print("number of zeros ", number_of_zeros)
-print("Testsamples: ", i)
+print("Testsample: ", i)
 for y in matrix:
     print(y)
