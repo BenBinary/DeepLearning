@@ -35,7 +35,8 @@ img_rows, img_cols = 28, 28
 
 
 # Inhalt eines Ordners
-anz_datensaetze_input = 0
+test_index_dataset = 0
+train_index_dataset = 10000
 
 # Daten einlesen für die Testmenge
 
@@ -52,12 +53,19 @@ for aktuelle_zahl in range(0, 10):
         for entry in entries:
             pfad = verzeichnis + entry.name
             print(pfad)
-            x_test[anz_datensaetze_input] = mpimg.imread(pfad)
-            y_test[anz_datensaetze_input] = aktuelle_zahl
-            anz_datensaetze_input=anz_datensaetze_input+1
+
+            # für Testing
+            x_test[test_index_dataset] = mpimg.imread(pfad)
+            y_test[test_index_dataset] = aktuelle_zahl
+            test_index_dataset=test_index_dataset+1
+
+            # für Training - ab Index 10.000
+            x_train[train_index_dataset] = mpimg.imread(pfad)
+            y_train[train_index_dataset] = aktuelle_zahl
+            train_index_dataset = train_index_dataset + 1
 
 
-print("So viele Datensätze wurden eingelesen ", anz_datensaetze_input)
+print("So viele Datensätze wurden eingelesen ", test_index_dataset)
 
 
 
