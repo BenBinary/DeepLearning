@@ -17,7 +17,7 @@ import array as arr
 
 batch_size = 128
 num_classes = 10
-epochs = 0
+epochs = 1
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -35,35 +35,30 @@ img_rows, img_cols = 28, 28
 
 
 # Inhalt eines Ordners
-i = 0
+anz_datensaetze_input = 0
 
-# 0er einlesen
-with os.scandir('./TESTSET/0/') as entries:
+# Daten einlesen für die Testmenge
 
-    #print("Anzahl der Einträge ", len(entries))
+for aktuelle_zahl in range(0, 9):
 
-    for entry in entries:
-        pfad = './TESTSET/0/' + entry.name
-        #print(pfad)
-        x_test[i] = mpimg.imread(pfad)
-        y_test[i] = 0
-        i=i+1
-print("so viele 0er gelsesne ", i)
+    verzeichnis = './TESTSET/' + str(aktuelle_zahl) + '/'
+
+    print("Verzeichnis: ", verzeichnis)
+
+    with os.scandir(verzeichnis) as entries:
+
+        #print("Anzahl der Einträge ", len(entries))
+
+        for entry in entries:
+            pfad = verzeichnis + entry.name
+            #print(pfad)
+            x_test[anz_datensaetze_input] = mpimg.imread(pfad)
+            y_test[anz_datensaetze_input] = 0
+            anz_datensaetze_input=anz_datensaetze_input+1
 
 
-#i = 0
-#j = 0
-#img=mpimg.imread('./TESTSET/0/f407.png')
-# emtpy the array
-#for x in range(0, 5):
-#    x_test[x]=img
- 
+print("So viele Datensätze wurden eingelesen ", anz_datensaetze_input)
 
-#for y in range(0, 5):
-#    y_test[y] = 0
- 
-#x_test[0]=img
-#y_test[0]=1
 
 
 if K.image_data_format() == 'channels_first':
@@ -135,7 +130,9 @@ matrix = [[0 for x in range(w)] for y in range(h) ]
 
 number_of_zeros = 0
 
-for digit_array in pre_X:
+for b in range(0, 150):
+
+    digit_array = pre_X[b]
     label_array = y_test[i]
     value_label = np.argmax(label_array)
     value_prediciton = np.argmax(digit_array)
@@ -148,7 +145,7 @@ for digit_array in pre_X:
         number_of_zeros = number_of_zeros + 1
 
     #print("label ", label_array)
-    #print("value ", value_prediciton)
+    print("value ", value_prediciton)
 
 
 print("number of zeros ", number_of_zeros)
