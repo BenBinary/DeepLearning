@@ -6,6 +6,7 @@ from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
 from metrics import metrics
+import regex
 import numpy as np
 import sklearn.datasets 
 # from keras.models import Sequential, load_model
@@ -14,6 +15,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import os
 import array as arr
+
 
 batch_size = 128
 num_classes = 10
@@ -46,23 +48,28 @@ for aktuelle_zahl in range(0, 10):
 
     print("Verzeichnis: ", verzeichnis)
 
+    regex_png = regex.compile('f*.png')
+
     with os.scandir(verzeichnis) as entries:
 
         #print("Anzahl der Einträge ", len(entries))
 
         for entry in entries:
-            pfad = verzeichnis + entry.name
-            print(pfad)
 
-            # für Testing
-            x_test[test_index_dataset] = mpimg.imread(pfad)
-            y_test[test_index_dataset] = aktuelle_zahl
-            test_index_dataset=test_index_dataset+1
 
-            # für Training - ab Index 10.000
-            x_train[train_index_dataset] = mpimg.imread(pfad)
-            y_train[train_index_dataset] = aktuelle_zahl
-            train_index_dataset = train_index_dataset + 1
+            if regex.search(regex_png, entry.name) :
+                pfad = verzeichnis + entry.name
+                #print(pfad)
+
+                # für Testing
+                x_test[test_index_dataset] = mpimg.imread(pfad)
+                y_test[test_index_dataset] = aktuelle_zahl
+                test_index_dataset=test_index_dataset+1
+
+                # für Training - ab Index 10.000
+                x_train[train_index_dataset] = mpimg.imread(pfad)
+                y_train[train_index_dataset] = aktuelle_zahl
+                train_index_dataset = train_index_dataset + 1
 
 
 print("So viele Datensätze wurden eingelesen ", test_index_dataset)
@@ -159,7 +166,7 @@ for b in range(0, 1000):
         number_of_zeros = number_of_zeros + 1
 
     #print("label ", label_array)
-    print("value ", value_prediciton)
+    #print("value ", value_prediciton)
 
 
 print("number of zeros ", number_of_zeros)
