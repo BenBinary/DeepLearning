@@ -14,24 +14,17 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import os
 import array as arr
+import regex
 
 batch_size = 128
 num_classes = 10
-epochs = 3
+epochs = 12
 
 # input image dimensions
 img_rows, img_cols = 28, 28
 
 # the data, split between train and test sets
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
-
-# Test-Arrays leeren
-#x_test = arr.array('i');
-#y_test = arr.array('i');
-
-#for i in range(0, 60):
-#    x_test[i] = 0
-#    y_test[i] = 0
 
 
 # Inhalt eines Ordners
@@ -45,21 +38,32 @@ for aktuelle_zahl in range(0, 10):
 
     print("Verzeichnis: ", verzeichnis)
 
+    regex_png = regex.compile('f*.png')
+
+
     with os.scandir(verzeichnis) as entries:
 
         #print("Anzahl der Einträge ", len(entries))
-
         for entry in entries:
-            pfad = verzeichnis + entry.name
-            print(pfad)
-            x_test[anz_datensaetze_input] = mpimg.imread(pfad)
-            y_test[anz_datensaetze_input] = aktuelle_zahl
-            anz_datensaetze_input=anz_datensaetze_input+1
+            if regex.search(regex_png, entry.name) :
+                pfad = verzeichnis + entry.name
+                
+                # Image Bestimmen
+                image = mpimg.imread(pfad)
+                image *= 255
+                #image = 255-image
+
+                x_test[anz_datensaetze_input] = image
+                y_test[anz_datensaetze_input] = aktuelle_zahl
+                anz_datensaetze_input=anz_datensaetze_input+1
 
 
 print("So viele Datensätze wurden eingelesen ", anz_datensaetze_input)
 
 
+
+print(x_test[0])
+print(x_test[786])
 
 if K.image_data_format() == 'channels_first':
     x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
@@ -148,7 +152,7 @@ for b in range(0, 1000):
         number_of_zeros = number_of_zeros + 1
 
     #print("label ", label_array)
-    print("value ", value_prediciton)
+    #print("value ", value_prediciton)
 
 
 print("number of zeros ", number_of_zeros)

@@ -59,23 +59,30 @@ for aktuelle_zahl in range(0, 10):
 
             if regex.search(regex_png, entry.name) :
                 pfad = verzeichnis + entry.name
-                #print(pfad)
+                image = mpimg.imread(pfad)
+                #image /= image
+                #image = image.astype('float32')
+                #image = image.reshape(1, 28, 28, 1)
+                #image = 255-image
+                
 
                 # für Testing
-                x_test[test_index_dataset] = mpimg.imread(pfad)
+                x_test[test_index_dataset] = image
                 y_test[test_index_dataset] = aktuelle_zahl
                 test_index_dataset=test_index_dataset+1
 
                 # für Training - ab Index 10.000
-                x_train[train_index_dataset] = mpimg.imread(pfad)
+                x_train[train_index_dataset] = image
                 y_train[train_index_dataset] = aktuelle_zahl
                 train_index_dataset = train_index_dataset + 1
 
 
 print("So viele Datensätze wurden eingelesen ", test_index_dataset)
 
-print(x_test[0])
-print(x_test[800])
+
+
+print("X test 0", x_test[0])
+print("X test 800", x_test[800])
 
 
 if K.image_data_format() == 'channels_first':
@@ -88,12 +95,21 @@ else:
     input_shape = (img_rows, img_cols, 1)
 
 x_train = x_train.astype('float32')
-x_test = x_test.astype('float32')
+x_train = x_train.flatten()
 x_train /= 255
+
+x_test = x_test.astype('float32')
 x_test /= 255
+
+
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
+
+
+#print("X test 0", x_test[0])
+#print("X test 20", x_test[20])
+#print("X test 800", x_test[800])
 
 # convert class vectors to binary class matrices
 y_train = keras.utils.to_categorical(y_train, num_classes)
@@ -118,30 +134,28 @@ model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
 
+print("compiliert")
 
 # Parameter für das Testing werden festgelgt
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
           verbose=1,
-          validation_data=(x_test, y_test),
-          shuffle=True)
+          validation_data=(x_test, y_test))
+
+
+print("fit")
 
 # Testing
     # Scalar test loss (if the model has a single output and no metrics)  
     #   or list of scalars (if the model has multiple outputs  
     #   and/or metrics). The attribute `model.metrics_names` will give you  
     #   the display labels for the scalar outputs.
+
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
-
-# Predicition
-x_test_2 = []
-#for a in range(0, 50):
- #   print(x_test[0][a])
-    #x_test_2[i] = x_test[i]
 
 pre_X = model.predict(x_test, batch_size=batch_size)
 
