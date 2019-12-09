@@ -17,7 +17,7 @@ import array as arr
 
 batch_size = 128
 num_classes = 10
-epochs = 3
+epochs = 1
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -67,6 +67,8 @@ for aktuelle_zahl in range(0, 10):
 
 print("So viele Datensätze wurden eingelesen ", test_index_dataset)
 
+print(x_test[0])
+print(x_test[800])
 
 
 if K.image_data_format() == 'channels_first':
@@ -115,7 +117,8 @@ model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
           verbose=1,
-          validation_data=(x_test, y_test))
+          validation_data=(x_test, y_test),
+          shuffle=True)
 
 # Testing
     # Scalar test loss (if the model has a single output and no metrics)  
