@@ -9,6 +9,8 @@ from metrics import metrics
 import numpy as np
 # from keras.models import Sequential, load_model
 # from numpy import numpy
+import cv2
+import os
 
 
 batch_size = 128
@@ -20,6 +22,13 @@ img_rows, img_cols = 28, 28
 
 # the data, split between train and test sets
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+# exportiern der Dateien
+img = cv2.imread(x_test[0], 1)
+path = "./"
+cv2.imwrite(os.path.join(path, "output.png"), img)
+cv2.waitKey(0)
+
 
 if K.image_data_format() == 'channels_first':
     x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
