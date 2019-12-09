@@ -7,19 +7,37 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
 from metrics import metrics
 import numpy as np
+import sklearn.datasets 
 # from keras.models import Sequential, load_model
 # from numpy import numpy
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+
+
 
 
 batch_size = 128
 num_classes = 10
-epochs = 12
+epochs = 0
 
 # input image dimensions
 img_rows, img_cols = 28, 28
 
 # the data, split between train and test sets
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+
+# emtpy the array
+for x in x_test:
+    x is None
+
+for y in y_test:
+    y is None
+
+img=mpimg.imread('./TESTSET/0/f01.png')
+x_test[0]=img
+y_test[0]=1
+
 
 if K.image_data_format() == 'channels_first':
     x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
