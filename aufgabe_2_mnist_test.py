@@ -12,13 +12,12 @@ import sklearn.datasets
 # from numpy import numpy
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-
-
-
+import os
+import array as arr
 
 batch_size = 128
 num_classes = 10
-epochs = 1
+epochs = 0
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -26,23 +25,45 @@ img_rows, img_cols = 28, 28
 # the data, split between train and test sets
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
+# Test-Arrays leeren
+#x_test = arr.array('i');
+#y_test = arr.array('i');
 
+#for i in range(0, 60):
+#    x_test[i] = 0
+#    y_test[i] = 0
+
+
+# Inhalt eines Ordners
 i = 0
-j = 0
-img=mpimg.imread('./TESTSET/0/f01.png')
+
+# 0er einlesen
+with os.scandir('./TESTSET/0/') as entries:
+
+    #print("Anzahl der Einträge ", len(entries))
+
+    for entry in entries:
+        pfad = './TESTSET/0/' + entry.name
+        #print(pfad)
+        x_test[i] = mpimg.imread(pfad)
+        y_test[i] = 0
+        i=i+1
+print("so viele 0er gelsesne ", i)
+
+
+#i = 0
+#j = 0
+#img=mpimg.imread('./TESTSET/0/f407.png')
 # emtpy the array
-for x in x_test:
-    x_test[j]=img
-    j=j+1
+#for x in range(0, 5):
+#    x_test[x]=img
+ 
 
-for y in y_test:
-    y_test[i] = 0
-    i=i+1
-
-
-
-x_test[0]=img
-y_test[0]=1
+#for y in range(0, 5):
+#    y_test[y] = 0
+ 
+#x_test[0]=img
+#y_test[0]=1
 
 
 if K.image_data_format() == 'channels_first':
@@ -101,8 +122,10 @@ print('Test accuracy:', score[1])
 
 
 # Predicition
-
-
+x_test_2 = []
+#for a in range(0, 50):
+ #   print(x_test[0][a])
+    #x_test_2[i] = x_test[i]
 
 pre_X = model.predict(x_test)
 
@@ -110,20 +133,25 @@ i = 0
 w, h = 10, 10;
 matrix = [[0 for x in range(w)] for y in range(h) ]
 
-
+number_of_zeros = 0
 
 for digit_array in pre_X:
     label_array = y_test[i]
     value_label = np.argmax(label_array)
     value_prediciton = np.argmax(digit_array)
 
-    matrix[value_prediciton][value_label] = matrix[value_prediciton][value_label] + 1
+    matrix[value_label][value_prediciton] = matrix[value_label][value_prediciton] + 1
 
     i = i + 1
 
-    print("label ", label_array)
-    print("value ", value_prediciton)
+    if value_label == 0:
+        number_of_zeros = number_of_zeros + 1
+
+    #print("label ", label_array)
+    #print("value ", value_prediciton)
 
 
+print("number of zeros ", number_of_zeros)
+print("Testsamples: ", i)
 for y in matrix:
     print(y)
