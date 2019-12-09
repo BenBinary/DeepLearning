@@ -18,7 +18,7 @@ import matplotlib.image as mpimg
 
 batch_size = 128
 num_classes = 10
-epochs = 0
+epochs = 1
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -27,14 +27,20 @@ img_rows, img_cols = 28, 28
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 
+i = 0
+j = 0
+img=mpimg.imread('./TESTSET/0/f01.png')
 # emtpy the array
 for x in x_test:
-    x is None
+    x_test[j]=img
+    j=j+1
 
 for y in y_test:
-    y is None
+    y_test[i] = 0
+    i=i+1
 
-img=mpimg.imread('./TESTSET/0/f01.png')
+
+
 x_test[0]=img
 y_test[0]=1
 
@@ -95,6 +101,9 @@ print('Test accuracy:', score[1])
 
 
 # Predicition
+
+
+
 pre_X = model.predict(x_test)
 
 i = 0
@@ -110,10 +119,11 @@ for digit_array in pre_X:
 
     matrix[value_prediciton][value_label] = matrix[value_prediciton][value_label] + 1
 
-    i = i + 1;
+    i = i + 1
 
-# print(matrix)
+    print("label ", label_array)
+    print("value ", value_prediciton)
+
 
 for y in matrix:
     print(y)
-
