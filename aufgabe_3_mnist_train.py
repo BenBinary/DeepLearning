@@ -27,14 +27,6 @@ img_rows, img_cols = 28, 28
 # the data, split between train and test sets
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-# Test-Arrays leeren
-#x_test = arr.array('i');
-#y_test = arr.array('i');
-
-#for i in range(0, 60):
-#    x_test[i] = 0
-#    y_test[i] = 0
-
 
 # Inhalt eines Ordners
 test_index_dataset = 0
@@ -60,11 +52,8 @@ for aktuelle_zahl in range(0, 10):
             if regex.search(regex_png, entry.name) :
                 pfad = verzeichnis + entry.name
                 image = mpimg.imread(pfad)
-                #image /= image
-                #image = image.astype('float32')
-                #image = image.reshape(1, 28, 28, 1)
-                #image = 255-image
-                
+                image *= 255
+
 
                 # für Testing
                 x_test[test_index_dataset] = image
@@ -81,8 +70,8 @@ print("So viele Datensätze wurden eingelesen ", test_index_dataset)
 
 
 
-print("X test 0", x_test[0])
-print("X test 800", x_test[800])
+#print("X test 0", x_test[0])
+#print("X test 800", x_test[800])
 
 
 if K.image_data_format() == 'channels_first':
@@ -95,11 +84,11 @@ else:
     input_shape = (img_rows, img_cols, 1)
 
 x_train = x_train.astype('float32')
-x_train = x_train.flatten()
-x_train /= 255
-
 x_test = x_test.astype('float32')
+x_train /= 255
 x_test /= 255
+x_train = x_train.flatten()
+
 
 
 print('x_train shape:', x_train.shape)

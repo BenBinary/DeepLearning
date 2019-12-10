@@ -31,12 +31,12 @@ img_rows, img_cols = 28, 28
 anz_datensaetze_input = 0
 
 # Daten einlesen für die Testmenge
+test_index_dataset = 0
+train_index_dataset = 10000
 
 for aktuelle_zahl in range(0, 10):
 
     verzeichnis = './TESTSET/' + str(aktuelle_zahl) + '/'
-
-    print("Verzeichnis: ", verzeichnis)
 
     regex_png = regex.compile('f*.png')
 
@@ -47,23 +47,24 @@ for aktuelle_zahl in range(0, 10):
         for entry in entries:
             if regex.search(regex_png, entry.name) :
                 pfad = verzeichnis + entry.name
-                
-                # Image Bestimmen
                 image = mpimg.imread(pfad)
                 image *= 255
-                #image = 255-image
+                
+                # für Testing
+                x_test[test_index_dataset] = image
+                y_test[test_index_dataset] = aktuelle_zahl
+                test_index_dataset=test_index_dataset+1
 
-                x_test[anz_datensaetze_input] = image
-                y_test[anz_datensaetze_input] = aktuelle_zahl
-                anz_datensaetze_input=anz_datensaetze_input+1
+                # für Training - ab Index 10.000
+                x_train[train_index_dataset] = image
+                y_train[train_index_dataset] = aktuelle_zahl
+                train_index_dataset = train_index_dataset + 1
 
 
-print("So viele Datensätze wurden eingelesen ", anz_datensaetze_input)
+print("So viele Datensätze wurden eingelesen ", test_index_dataset)
 
 
 
-#print(x_test[0])
-#print(x_test[786])
 
 if K.image_data_format() == 'channels_first':
     x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
