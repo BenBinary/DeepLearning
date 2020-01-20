@@ -18,7 +18,7 @@ import regex
 
 batch_size = 128
 num_classes = 10
-epochs = 20
+epochs = 7
 
 # input image dimensions
 img_rows, img_cols = 28, 28
@@ -137,7 +137,7 @@ matrix = [[0 for x in range(w)] for y in range(h) ]
 
 number_of_zeros = 0
 
-for b in range(0, 1000):
+for b in range(0, anz_datensaetze_input):
 
     digit_array = pre_X[b]
     label_array = y_test[i]

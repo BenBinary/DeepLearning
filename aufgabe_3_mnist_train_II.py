@@ -31,14 +31,14 @@ img_rows, img_cols = 28, 28
 anz_datensaetze_input = 0
 
 # Daten einlesen für die Testmenge
-test_index_dataset = 0
+test_index_dataset = 500
 train_index_dataset = 10000
 
 for aktuelle_zahl in range(0, 10):
 
     verzeichnis = './TESTSET/' + str(aktuelle_zahl) + '/'
 
-    regex_png = regex.compile('f*.png')
+    regex_png = regex.compile('[0-9a-zA-Z]*.png')
 
 
     with os.scandir(verzeichnis) as entries:
@@ -46,11 +46,14 @@ for aktuelle_zahl in range(0, 10):
         #print("Anzahl der Einträge ", len(entries))
         for entry in entries:
             if regex.search(regex_png, entry.name) :
+            
+                # Einlesen der Datei
                 pfad = verzeichnis + entry.name
+                print("Diese Datei wird eingelesen", pfad)
                 image = mpimg.imread(pfad)
                 image *= 255
                 
-                # für Testing
+                # Bilder in den Testdatensatz überschreiben
                 x_test[test_index_dataset] = image
                 y_test[test_index_dataset] = aktuelle_zahl
                 test_index_dataset=test_index_dataset+1

@@ -20,12 +20,15 @@ with np.load('./mnist.npz', allow_pickle=True) as f:
 
 #print(x_train[0])
 #print(y_train[0])
-print(x_test[0])
+#print(x_test[0])
 
 # Train Export
+#for i in range(0, 10000):
+#    cv2.imwrite("./export/train_test/f" + str(i) + ".png", x_train[i])
+    
 for i in range(0, 10000):
-    cv2.imwrite("./export/train/f" + str(i) + ".png", x_train[i])
+    cv2.imwrite("./export/train_test/y_" + str(i), y_train[i])
 
 # Test Export
-for i in range(0, 10000):
-    cv2.imwrite("./export/test/f" + str(i) + ".png", x_test[i])
+#for i in range(0, 10000):
+#    cv2.imwrite("./export/test/f" + str(i) + ".png", x_test[i])

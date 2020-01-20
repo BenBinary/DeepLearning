@@ -7,27 +7,24 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
 from metrics import metrics
 import numpy as np
+
+
 # from keras.models import Sequential, load_model
 # from numpy import numpy
 import cv2
 import os
 
+#from quiver_engine import server
 
 batch_size = 128
 num_classes = 10
-epochs = 12
+epochs = 1
 
 # input image dimensions
 img_rows, img_cols = 28, 28
 
 # the data, split between train and test sets
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
-
-# exportiern der Dateien
-img = cv2.imread(x_test[0], 1)
-path = "./"
-cv2.imwrite(os.path.join(path, "output.png"), img)
-cv2.waitKey(0)
 
 
 if K.image_data_format() == 'channels_first':
@@ -63,13 +60,22 @@ model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
+# Modell in JSON konvertieren
+json_string = model.to_json()
+# Bildschirmausgabe
+print("JSON ", json_string)
+# Die Architektur wird als JSON-Datei gesichert
+open('cifar10_architecture.json', 'w').write(json_string)
+# Auch die Gewichte die unser Netzwerk gelernt hat, sollen geischert werden
+model.save_weights('cifar10_weights.h5', overwrite=True)
+
 model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
 
 
 # Training
-model.fit(x_train, y_train,
+history = model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
           verbose=1,
@@ -84,27 +90,38 @@ score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
+# From Quiver
+#server.launch(model)
+
 
 # Predicition
 pre_X = model.predict(x_test)
 
 i = 0
 w, h = 10, 10;
+# Die Größe der Matrix definieren
 matrix = [[0 for x in range(w)] for y in range(h) ]
 
-
-
+# Durch alle Testdatensätze durchlaufen
 for digit_array in pre_X:
+    # Einlesen des richtigen Wertes (des Labels)
     label_array = y_test[i]
+    print(label_array)
     value_label = np.argmax(label_array)
     value_prediciton = np.argmax(digit_array)
 
     matrix[value_prediciton][value_label] = matrix[value_prediciton][value_label] + 1
 
-    i = i + 1;
+    i = i + 1
 
-# print(matrix)
-
+# Ausgabe der Matrix je Zeile
 for y in matrix:
     print(y)
 
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
